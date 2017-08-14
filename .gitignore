@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+app/libs/
+app/src/main/java/
+app/src/main/res/drawable/
