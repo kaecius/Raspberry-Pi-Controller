@@ -6,21 +6,22 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.canadillas.daniel.raspberrypicontroller.App;
+import es.canadillas.daniel.raspberrypicontroller.config.App;
 import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataContract;
 import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataOpenHelper;
 import es.canadillas.daniel.raspberrypicontroller.model.Host;
+import es.canadillas.daniel.raspberrypicontroller.util.Security;
 
 /**
  * Created by dani on 14/08/2017.
  */
 
-class DataAccessImpl implements DataAccess {
+public class DataAccessImpl implements DataAccess {
     private static final DataAccessImpl ourInstance = new DataAccessImpl();
 
     private DataOpenHelper mDbHelper = new DataOpenHelper(App.getContext());
 
-    static DataAccessImpl getInstance() {
+    public static DataAccessImpl getInstance() {
         return ourInstance;
     }
 
@@ -34,6 +35,7 @@ class DataAccessImpl implements DataAccess {
         String[] projection = {
                 DataContract.DataEntry._ID,
                 DataContract.DataEntry.HOST_COLUMN_NAME,
+                DataContract.DataEntry.USER_COLUMN_NAME,
                 DataContract.DataEntry.HASH_COLUMN_NAME
         };
         String sortOrder =
@@ -48,9 +50,16 @@ class DataAccessImpl implements DataAccess {
     }
 
     @Override
-    public boolean isValid(Host host) {
-
-        return false;
+    public boolean isValid(String password, Host host) {
+        boolean isValid = false;
+        if (!password.isEmpty()){
+            String salt = getSalt(host);
+            String tempPassHashed = Security.toHash(password,salt);
+            if (tempPassHashed.equals(host.getHash())){
+                isValid = true;
+            }
+        }
+        return isValid;
     }
 
     @Override

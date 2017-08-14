@@ -1,4 +1,4 @@
-package es.canadillas.daniel.raspberrypicontroller;
+package es.canadillas.daniel.raspberrypicontroller.config;
 
 import android.app.Application;
 import android.content.Context;

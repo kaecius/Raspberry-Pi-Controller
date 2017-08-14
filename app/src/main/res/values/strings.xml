@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">Raspberry Pi Controller</string>
+    <string name="app_name" translatable="false">Raspberry Pi Controller</string>
+    <string name="form_title">New Host</string>
+    <string name="host.form.confirm">Confirm</string>
+    <string name="host_form_cancel">Cancel</string>
+    <string name="no_host_found">Host not found in application</string>
+    <string name="connected_to_host">"Successfully connected to "</string>
+    <string name="no_connected_to_host">Cannot connect to</string>
+    <string name="checking">Checking Connection</string>
+    <string name="service_activated">Activated</string>
+    <string name="service_deactivated">Deactivated</string>
+    <string name="default_service_name">SERVICE_ERROR</string>
+    <string name="activating_service">Activating service</string>
+    <string name="desactivating_service">Deactivating service</string>
 </resources>

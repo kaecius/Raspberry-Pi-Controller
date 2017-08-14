@@ -38,13 +38,14 @@ public class Security {
 
     public static String toHash(String password, String salt){
         String hashed = "";
+
         init();
         md.update(salt.getBytes(utf8));
         byte[] temp = md.digest(password.getBytes(utf8));
-
         BigInteger bi = new BigInteger(temp);
         hashed = new BigInteger(temp).toString(16);
         System.out.println("GENERATED HASH" + hashed);
+
         return hashed;
     }
 

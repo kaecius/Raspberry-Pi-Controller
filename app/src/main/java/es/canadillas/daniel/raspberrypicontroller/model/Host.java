@@ -2,8 +2,6 @@ package es.canadillas.daniel.raspberrypicontroller.model;
 
 import android.database.Cursor;
 
-import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataContract;
-
 /**
  * Created by dani on 14/08/2017.
  */
@@ -11,21 +9,23 @@ import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataContract;
 public class Host {
 
     private int id;
-    private String name;
+    private String hostUrl;
+    private String user;
     private String hash;
 
     public Host(){
         this.id = -1;
     }
 
-    public Host(int id, String name, String hash){
+    public Host(int id, String hostUrl,String user, String hash){
 
     }
 
     public Host(Cursor c) {
         this.id = c.getInt(0);
-        this.name = c.getString(1);
-        this.hash = c.getString(2);
+        this.hostUrl = c.getString(1);
+        this.user = c.getString(2);
+        this.hash = c.getString(3);
     }
 
     public int getId() {
@@ -36,12 +36,20 @@ public class Host {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getHostUrl() {
+        return hostUrl;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHostUrl(String hostUrl) {
+        this.hostUrl = hostUrl;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getHash() {
