@@ -1,5 +1,6 @@
 package es.canadillas.daniel.raspberrypicontroller.dao;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -65,6 +66,17 @@ public class DataAccessImpl implements DataAccess {
     @Override
     public Host getHost(int id) {
         return null;
+    }
+
+    @Override
+    public void addHost(String host, String user, String password, String hash, String salt) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DataContract.DataEntry.HOST_COLUMN_NAME , host);
+        values.put(DataContract.DataEntry.USER_COLUMN_NAME , user);
+        values.put(DataContract.DataEntry.HASH_COLUMN_NAME , hash);
+        values.put(DataContract.DataEntry.SALT_COLUMN_NAME , salt);
+        db.insert(DataContract.DataEntry.DATA_TABLE_NAME,null,values);
     }
 
     private String getSalt(Host host){

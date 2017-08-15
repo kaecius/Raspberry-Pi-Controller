@@ -19,9 +19,7 @@ public class Security {
 
     private static void init(){
         try {
-            if (md != null){
                 md = MessageDigest.getInstance("SHA-256");
-            }
             md.reset();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -38,7 +36,6 @@ public class Security {
 
     public static String toHash(String password, String salt){
         String hashed = "";
-
         init();
         md.update(salt.getBytes(utf8));
         byte[] temp = md.digest(password.getBytes(utf8));

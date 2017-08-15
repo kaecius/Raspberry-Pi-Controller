@@ -18,7 +18,10 @@ public class Host {
     }
 
     public Host(int id, String hostUrl,String user, String hash){
-
+            this.id = id;
+        this.hostUrl = hostUrl;
+        this.user = user;
+        this.hash = hash;
     }
 
     public Host(Cursor c) {
