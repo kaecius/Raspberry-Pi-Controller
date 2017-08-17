@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@android:drawable/divider_horizontal_bright"
+    android:gravity="center_vertical">
+
+    <Switch
+        android:id="@+id/swtichActivated"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:checked="false"
+        android:paddingLeft="15dp"
+        android:switchMinWidth="50dp"
+        android:switchPadding="10dp"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat"
+        android:text="@string/service_deactivated"
+        android:theme="@style/SCBSwitch" />
+
+    <TextView
+        android:id="@+id/txtServiceName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/swtichActivated"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/swtichActivated"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="@string/default_service_name"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+</RelativeLayout>
