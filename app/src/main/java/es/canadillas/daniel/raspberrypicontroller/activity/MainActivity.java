@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import es.canadillas.daniel.raspberrypicontroller.R;
 import es.canadillas.daniel.raspberrypicontroller.controller.SshController;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
         String host = txtHost.getText().toString();
         String user = txtUser.getText().toString();
         String password = txtPassword.getText().toString();
-    //TODO mostrar mensaje o no cerrar cuando falla
+        //TODO mostrar mensaje o no cerrar cuando falla
         if(!host.isEmpty() && !user.isEmpty() && !password.isEmpty()){
             mSshController.addHost(host,user,password);
             Toast.makeText(this,"New host introduced",Toast.LENGTH_SHORT).show();
@@ -87,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
                 txtPassword.setTextColor(0xAAff0000);
             }
         }
-
+        for(Host h : mSshController.getHosts()){
+            System.out.println("Host :" + h.getHostUrl());
+        }
     }
 
     @Override
