@@ -11,7 +11,8 @@ import es.canadillas.daniel.raspberrypicontroller.model.Host;
 public interface DataAccess {
 
      List<Host> getHosts();
-     boolean isValid(String password,Host host);
      Host getHost(int id);
-    void addHost(String host, String user, String password, String hash, String salt);
+     void addHost(String host, String user, String password, int port);
+     void deleteHost(Host host);
+     void editHost(Host host);
 }

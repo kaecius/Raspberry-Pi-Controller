@@ -2,22 +2,23 @@ package es.canadillas.daniel.raspberrypicontroller.activity;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import es.canadillas.daniel.raspberrypicontroller.R;
 import es.canadillas.daniel.raspberrypicontroller.controller.SshController;
 import es.canadillas.daniel.raspberrypicontroller.model.Host;
 import es.canadillas.daniel.raspberrypicontroller.view.dialog.HostDialog;
+import es.canadillas.daniel.raspberrypicontroller.view.item.HostItemAdapter;
 
 public class MainActivity extends AppCompatActivity implements HostDialog.HostDialogListener {
 
@@ -29,6 +30,27 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSshController = SshController.getInstance();
+        new AsyncTask<Void,Void,Void>(){
+
+            private ListView lsHosts;
+            private List<Host> hosts;
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                lsHosts = (ListView) findViewById(R.id.lsHosts);
+                hosts = mSshController.getHosts();
+                publishProgress();
+                return null;
+            }
+
+            @Override
+            protected void onProgressUpdate(Void... values) {
+                super.onProgressUpdate(values);
+                if (hosts != null){
+                    lsHosts.setAdapter(new HostItemAdapter(MainActivity.this,hosts));
+                }
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -70,27 +92,34 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
         EditText txtUser =  dialogView.findViewById(R.id.edTxtUser);
         EditText txtPassword =  dialogView.findViewById(R.id.edTxtPassword);
 
-        String host = txtHost.getText().toString();
-        String user = txtUser.getText().toString();
-        String password = txtPassword.getText().toString();
+        String hostStr = txtHost.getText().toString();
+        String userStr = txtUser.getText().toString();
+        String passwordStr = txtPassword.getText().toString();
         //TODO mostrar mensaje o no cerrar cuando falla
-        if(!host.isEmpty() && !user.isEmpty() && !password.isEmpty()){
-            mSshController.addHost(host,user,password);
-            Toast.makeText(this,"New host introduced",Toast.LENGTH_SHORT).show();
+        if(!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()){
+            try{
+                mSshController.addHost(hostStr,userStr,passwordStr);
+                Toast.makeText(this,"New host introduced",Toast.LENGTH_SHORT).show();
+            }catch (NumberFormatException ex){
+                Toast.makeText(this,"ERROR",Toast.LENGTH_SHORT).show();
+            }
         }else{
-            if (host.isEmpty()){
+            if (hostStr.isEmpty()){
                 txtHost.setTextColor(0xAAff0000);
             }
-            if (user.isEmpty()){
+            if (userStr.isEmpty()){
                 txtUser.setTextColor(0xAAff0000);
             }
-            if (password.isEmpty()){
+            if (passwordStr.isEmpty()){
                 txtPassword.setTextColor(0xAAff0000);
             }
         }
         for(Host h : mSshController.getHosts()){
             System.out.println("Host :" + h.getHostUrl());
         }
+        HostItemAdapter hostItemAdapter = ((HostItemAdapter) ((ListView) findViewById(R.id.lsHosts)).getAdapter());
+        hostItemAdapter.setHosts(mSshController.getHosts());
+        hostItemAdapter.notifyDataSetChanged();
     }
 
     @Override

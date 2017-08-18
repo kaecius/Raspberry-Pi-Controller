@@ -3,7 +3,6 @@
     <item>
         <shape
             android:shape="rectangle">
-            <!-- Set the border color of your layout here -->
             <stroke android:width="0.5dp" android:color="@color/colorPrimaryDark" />
             <solid android:color="@color/colorPrimaryDark" />
         </shape>

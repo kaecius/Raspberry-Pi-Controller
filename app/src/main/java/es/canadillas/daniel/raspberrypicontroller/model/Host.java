@@ -11,24 +11,28 @@ public class Host {
     private int id;
     private String hostUrl;
     private String user;
-    private String hash;
+    private String password;
+    private int port;
+
 
     public Host(){
         this.id = -1;
     }
 
-    public Host(int id, String hostUrl,String user, String hash){
+    public Host(int id, String hostUrl,String user, String password,int port){
             this.id = id;
         this.hostUrl = hostUrl;
         this.user = user;
-        this.hash = hash;
+        this.password = password;
+        this.port = port;
     }
 
     public Host(Cursor c) {
         this.id = c.getInt(0);
         this.hostUrl = c.getString(1);
         this.user = c.getString(2);
-        this.hash = c.getString(3);
+        this.password = c.getString(3);
+        this.port = c.getInt(4);
     }
 
     public int getId() {
@@ -55,11 +59,19 @@ public class Host {
         this.user = user;
     }
 
-    public String getHash() {
-        return hash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

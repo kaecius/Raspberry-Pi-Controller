@@ -37,7 +37,8 @@ public class DataAccessImpl implements DataAccess {
                 DataContract.DataEntry._ID,
                 DataContract.DataEntry.HOST_COLUMN_NAME,
                 DataContract.DataEntry.USER_COLUMN_NAME,
-                DataContract.DataEntry.HASH_COLUMN_NAME
+                DataContract.DataEntry.PASS_COLUMN_NAME,
+                DataContract.DataEntry.PORT_COLUMN_NAME
         };
         String sortOrder =
                 DataContract.DataEntry._ID + " ASC";
@@ -50,18 +51,7 @@ public class DataAccessImpl implements DataAccess {
         return hosts;
     }
 
-    @Override
-    public boolean isValid(String password, Host host) {
-        boolean isValid = false;
-        if (!password.isEmpty()){
-            String salt = getSalt(host);
-            String tempPassHashed = Security.toHash(password,salt);
-            if (tempPassHashed.equals(host.getHash())){
-                isValid = true;
-            }
-        }
-        return isValid;
-    }
+
 
     @Override
     public Host getHost(int id) {
@@ -69,32 +59,27 @@ public class DataAccessImpl implements DataAccess {
     }
 
     @Override
-    public void addHost(String host, String user, String password, String hash, String salt) {
+    public void addHost(String host, String user, String password,int port) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DataContract.DataEntry.HOST_COLUMN_NAME , host);
         values.put(DataContract.DataEntry.USER_COLUMN_NAME , user);
-        values.put(DataContract.DataEntry.HASH_COLUMN_NAME , hash);
-        values.put(DataContract.DataEntry.SALT_COLUMN_NAME , salt);
+        values.put(DataContract.DataEntry.PASS_COLUMN_NAME , password);
+        values.put(DataContract.DataEntry.PORT_COLUMN_NAME, port);
         db.insert(DataContract.DataEntry.DATA_TABLE_NAME,null,values);
     }
 
-    private String getSalt(Host host){
-        String hash = "";
+    @Override
+    public void deleteHost(Host host) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        String selection = DataContract.DataEntry._ID + "= ?";
+        String[] selectionArgs = { String.valueOf(host.getId()) };
+        db.delete(DataContract.DataEntry.DATA_TABLE_NAME,selection,selectionArgs);
+    }
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        String[] projection = {
-                DataContract.DataEntry.SALT_COLUMN_NAME
-        };
-        String selection = DataContract.DataEntry._ID + " = ?";
-        String[] selectionArgs = {
-            String.valueOf(host.getId())
-        };
-        Cursor c = db.query(DataContract.DataEntry.DATA_TABLE_NAME,projection,selection,selectionArgs,null,null,null);
-        if (c.moveToFirst()){
-            hash = c.getString(0);
-        }
-        return hash;
+
+    public void editHost(Host host){
+
     }
 
 }
