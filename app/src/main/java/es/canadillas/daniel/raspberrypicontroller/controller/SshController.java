@@ -44,7 +44,7 @@ public class SshController {
     public String getHostFromHostStirng(String hostString){
         String host = hostString;
         if (hostString.contains(":")){
-            host = hostString.substring(0,hostString.lastIndexOf(":")-1);
+            host = hostString.substring(0,hostString.lastIndexOf(":"));
         }
         return host;
     }

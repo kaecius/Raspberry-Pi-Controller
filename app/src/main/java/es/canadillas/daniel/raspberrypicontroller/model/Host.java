@@ -2,11 +2,13 @@ package es.canadillas.daniel.raspberrypicontroller.model;
 
 import android.database.Cursor;
 
+import java.io.Serializable;
+
 /**
  * Created by dani on 14/08/2017.
  */
 
-public class Host {
+public class Host implements Serializable {
 
     private int id;
     private String hostUrl;

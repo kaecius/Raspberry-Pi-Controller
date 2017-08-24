@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import es.canadillas.daniel.raspberrypicontroller.R;
+import es.canadillas.daniel.raspberrypicontroller.activity.ServicesActivity;
 import es.canadillas.daniel.raspberrypicontroller.controller.SshController;
 import es.canadillas.daniel.raspberrypicontroller.dao.DataAccess;
 import es.canadillas.daniel.raspberrypicontroller.dao.DataAccessImpl;
@@ -72,26 +74,27 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
         txtHost.setText(host.getHostUrl());
         txtID.setText(String.valueOf(host.getId()));
 
-        btnBorrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataAccess dao = DataAccessImpl.getInstance();
-                dao.deleteHost(HostItemAdapter.this.hosts.get(itemPos));
-                hosts.remove(itemPos);
-                HostItemAdapter.this.notifyDataSetChanged();
-                Toast.makeText(HostItemAdapter.this.context,"Borrado!",Toast.LENGTH_SHORT).show();
-            }
+        rowView.setOnClickListener( clickedView -> {
+            Host clickedHost = HostItemAdapter.this.hosts.get(itemPos);
+            Intent intent = new Intent(context, ServicesActivity.class);
+            intent.putExtra("host",clickedHost);
+            context.startActivity(intent);
         });
-        btnEditar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinearLayout hostListView = (LinearLayout) ((ViewGroup) view.getParent()).getParent();
-                String idStr = ((TextView) hostListView.findViewById(R.id.txtID)).getText().toString();
-                actualHostId = Integer.parseInt(idStr);
-                HostDialog hostDialog  = new HostDialog();
-                hostDialog.setListener(HostItemAdapter.this);
-                hostDialog.show(((Activity) context).getFragmentManager(), "HostDialogFragment");
-            }
+
+        btnBorrar.setOnClickListener( clickedView -> {
+            DataAccess dao = DataAccessImpl.getInstance();
+            dao.deleteHost(HostItemAdapter.this.hosts.get(itemPos));
+            hosts.remove(itemPos);
+            HostItemAdapter.this.notifyDataSetChanged();
+            Toast.makeText(HostItemAdapter.this.context,"Borrado!",Toast.LENGTH_SHORT).show();
+        });
+        btnEditar.setOnClickListener( clickedView -> {
+            LinearLayout hostListView = (LinearLayout) clickedView.getParent().getParent();
+            String idStr = ((TextView) hostListView.findViewById(R.id.txtID)).getText().toString();
+            actualHostId = Integer.parseInt(idStr);
+            HostDialog hostDialog  = new HostDialog();
+            hostDialog.setListener(HostItemAdapter.this);
+            hostDialog.show(((Activity) context).getFragmentManager(), "HostDialogFragment");
         });
         return rowView;
     }
@@ -108,7 +111,7 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
         String passwordStr = txtPassword.getText().toString();
 
         if(!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()){
-            Host hostModified = null;
+            Host hostModified;
             int i;
             for (i = 0; i <  hosts.size() && hosts.get(i).getId() != actualHostId; i++);
             if (i < hosts.size()){
