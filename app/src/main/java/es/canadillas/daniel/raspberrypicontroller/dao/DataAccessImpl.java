@@ -44,10 +44,11 @@ public class DataAccessImpl implements DataAccess {
                 DataContract.DataEntry._ID + " ASC";
 
         Cursor c = db.query(DataContract.DataEntry.DATA_TABLE_NAME,projection,null,null,null,null,sortOrder);
-        c.moveToFirst();
-        do{
-            hosts.add(new Host(c));
-        }while(c.moveToNext());
+        if(c.moveToFirst()){
+            do{
+                hosts.add(new Host(c));
+            }while(c.moveToNext());
+        }
         return hosts;
     }
 
@@ -78,8 +79,22 @@ public class DataAccessImpl implements DataAccess {
     }
 
 
-    public void editHost(Host host){
-
+    public boolean editHost(Host host){
+        boolean result = false;
+        try{
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(DataContract.DataEntry.HOST_COLUMN_NAME, host.getHostUrl());
+            values.put(DataContract.DataEntry.PORT_COLUMN_NAME, host.getPort());
+            values.put(DataContract.DataEntry.USER_COLUMN_NAME , host.getUser());
+            values.put(DataContract.DataEntry.PASS_COLUMN_NAME, host.getPassword());
+            String selection = DataContract.DataEntry._ID + " = ?";
+            String[] selectionArgs = { String.valueOf(host.getId()) };
+            db.update(DataContract.DataEntry.DATA_TABLE_NAME, values,selection,selectionArgs);
+            result = true;
+        }catch(Throwable t){
+        }
+        return result;
     }
 
 }

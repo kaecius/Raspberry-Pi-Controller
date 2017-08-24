@@ -8,15 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import es.canadillas.daniel.raspberrypicontroller.R;
+import es.canadillas.daniel.raspberrypicontroller.controller.SshController;
 import es.canadillas.daniel.raspberrypicontroller.dao.DataAccess;
 import es.canadillas.daniel.raspberrypicontroller.dao.DataAccessImpl;
 import es.canadillas.daniel.raspberrypicontroller.model.Host;
@@ -30,10 +31,12 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
 
     private Context context;
     private List<Host> hosts;
-
+    private int actualHostId;
+    private SshController sshController;
     public HostItemAdapter(Context context, List<Host> hosts) {
         this.context = context;
         this.hosts = hosts;
+        this.sshController = SshController.getInstance();
     }
 
     @Override
@@ -54,15 +57,21 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View rowView = view;
+        Host host = this.hosts.get(i);
         final int itemPos = i;
         if (view == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.host_card,viewGroup,false);
         }
+
         ImageButton btnBorrar = rowView.findViewById(R.id.btnDelete);
         ImageButton btnEditar = rowView.findViewById(R.id.btnEdit);
         TextView txtHost = rowView.findViewById(R.id.txtHostName);
-        txtHost.setText(this.hosts.get(i).getHostUrl());
+        TextView txtID = rowView.findViewById(R.id.txtID);
+
+        txtHost.setText(host.getHostUrl());
+        txtID.setText(String.valueOf(host.getId()));
+
         btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +85,9 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
         btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LinearLayout hostListView = (LinearLayout) ((ViewGroup) view.getParent()).getParent();
+                String idStr = ((TextView) hostListView.findViewById(R.id.txtID)).getText().toString();
+                actualHostId = Integer.parseInt(idStr);
                 HostDialog hostDialog  = new HostDialog();
                 hostDialog.setListener(HostItemAdapter.this);
                 hostDialog.show(((Activity) context).getFragmentManager(), "HostDialogFragment");
@@ -86,7 +98,35 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        //TODO hacer editar
+        Dialog dialogView = dialog.getDialog();
+        EditText txtHost =  dialogView.findViewById(R.id.edTxtHost);
+        EditText txtUser =  dialogView.findViewById(R.id.edTxtUser);
+        EditText txtPassword =  dialogView.findViewById(R.id.edTxtPassword);
+
+        String hostStr = txtHost.getText().toString();
+        String userStr = txtUser.getText().toString();
+        String passwordStr = txtPassword.getText().toString();
+
+        if(!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()){
+            Host hostModified = null;
+            int i;
+            for (i = 0; i <  hosts.size() && hosts.get(i).getId() != actualHostId; i++);
+            if (i < hosts.size()){
+                hostModified = hosts.get(i);
+                hostModified.setHostUrl(sshController.getHostFromHostStirng(hostStr));
+                hostModified.setPort(sshController.getPortFromHostString(hostStr));
+                hostModified.setUser(userStr);
+                hostModified.setPassword(passwordStr);
+                if (sshController.editHost(hostModified)){
+                    hosts.set(i,hostModified);
+                    HostItemAdapter.this.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(dialog.getDialog().getContext(),"Error al editar",Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(dialog.getDialog().getContext(),"Error al editar",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

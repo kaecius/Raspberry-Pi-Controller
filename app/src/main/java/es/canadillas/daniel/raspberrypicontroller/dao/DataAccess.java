@@ -14,5 +14,5 @@ public interface DataAccess {
      Host getHost(int id);
      void addHost(String host, String user, String password, int port);
      void deleteHost(Host host);
-     void editHost(Host host);
+     boolean editHost(Host host);
 }

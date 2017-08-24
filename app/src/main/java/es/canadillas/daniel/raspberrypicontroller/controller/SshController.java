@@ -20,17 +20,33 @@ public class SshController {
     }
 
     public void addHost(String hostStr, String user, String password) throws NumberFormatException {
-        String host = hostStr;
-        int port = 22;
-        if (hostStr.contains(":")){
-            host = hostStr.substring(0,hostStr.lastIndexOf(":")-1);
-            port = Integer.parseInt(hostStr.substring(hostStr.lastIndexOf(":")+1));
-            System.out.println(host);
-        }
+        String host = getHostFromHostStirng(hostStr);
+        int port = getPortFromHostString(hostStr);
         mDao.addHost(host,user,password, port);
     }
 
     public List<Host> getHosts() {
         return mDao.getHosts();
     }
+
+    public boolean editHost(Host host){
+        return mDao.editHost(host);
+    }
+
+    public int getPortFromHostString(String hostString){
+        int port = 22;
+        if (hostString.contains(":")){
+            port = Integer.parseInt(hostString.substring(hostString.lastIndexOf(":")+1));
+        }
+        return port;
+    }
+
+    public String getHostFromHostStirng(String hostString){
+        String host = hostString;
+        if (hostString.contains(":")){
+            host = hostString.substring(0,hostString.lastIndexOf(":")-1);
+        }
+        return host;
+    }
+
 }
