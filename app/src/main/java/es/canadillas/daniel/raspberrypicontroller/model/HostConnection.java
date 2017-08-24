@@ -59,7 +59,6 @@ public class HostConnection {
             properties.put("StrictHostKeyChecking","no");
             session.setConfig(properties);
             session.setTimeout(1000);
-            session.connect();
         } catch (JSchException e) {
             e.printStackTrace();
         }
@@ -71,12 +70,29 @@ public class HostConnection {
 
         Session session = getSession(user,password,host,port);
         try {
-            session.setTimeout(2000);
             session.connect();
             result = true;
             session.disconnect();
         } catch (JSchException e) {
             e.printStackTrace();
+        } catch (Throwable t){
+            t.printStackTrace();
+        }
+        return  result;
+    }
+
+    public static boolean testConnection(Host host){
+        boolean result = false;
+
+        Session session = getSession(host.getUser(),host.getPassword(),host.getHostUrl(),host.getPort());
+        try {
+            session.connect();
+            result = true;
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        } catch (Throwable t){
+            t.printStackTrace();
         }
         return  result;
     }
