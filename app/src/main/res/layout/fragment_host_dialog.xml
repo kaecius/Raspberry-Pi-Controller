@@ -37,7 +37,7 @@
         android:text="Host :"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        tools:text="Host :" />
+        tools:text="@string/host_title" />
 
     <EditText
         android:id="@+id/edTxtHost"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="Host hostUrl or ip"
+        android:hint="@string/host_hint"
         android:inputType="textPersonName" />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="serif"
-        android:text="SSH User :"
+        android:text="@string/user_title"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="User"
+        android:hint="@string/user_hint"
         android:inputType="textPersonName" />
 
     <TextView
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="serif"
-        android:text="SSH Password :"
+        android:text="@string/pass_title"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/pass_hint"
         android:inputType="textPassword" />
 
 </LinearLayout>

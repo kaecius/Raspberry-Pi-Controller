@@ -4,9 +4,6 @@ import android.database.Cursor;
 
 import java.io.Serializable;
 
-/**
- * Created by dani on 14/08/2017.
- */
 
 public class Host implements Serializable {
 
@@ -17,12 +14,12 @@ public class Host implements Serializable {
     private int port;
 
 
-    public Host(){
+    public Host() {
         this.id = -1;
     }
 
-    public Host(int id, String hostUrl,String user, String password,int port){
-            this.id = id;
+    public Host(int id, String hostUrl, String user, String password, int port) {
+        this.id = id;
         this.hostUrl = hostUrl;
         this.user = user;
         this.password = password;

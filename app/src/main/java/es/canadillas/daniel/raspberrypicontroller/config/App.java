@@ -3,9 +3,6 @@ package es.canadillas.daniel.raspberrypicontroller.config;
 import android.app.Application;
 import android.content.Context;
 
-/**
- * Created by dani on 14/08/2017.
- */
 
 public class App extends Application {
     private static Application sApplication;

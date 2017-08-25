@@ -17,9 +17,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by dani on 18/08/2017.
- */
 
 public class HostConnection {
 
@@ -36,119 +33,108 @@ public class HostConnection {
     private Session getSessionInstance() {
         Session session = null;
         try {
-            session = jSch.getSession(this.host.getUser(),this.host.getHostUrl(),this.host.getPort());
+            session = jSch.getSession(this.host.getUser(), this.host.getHostUrl(), this.host.getPort());
             session.setPassword(this.host.getPassword());
             Properties properties = new Properties();
-            properties.put("StrictHostKeyChecking","no");
+            properties.put("StrictHostKeyChecking", "no");
             session.setConfig(properties);
             session.setTimeout(1000);
+            session.connect();
         } catch (JSchException e) {
-            e.printStackTrace();
-        }
-        return  session;
-    }
-
-
-    private static Session getSession(String user,String password, String host, int port){
-        Session session = null;
-        try {
-            JSch JSCH = new JSch();
-            session = JSCH.getSession(user,host,port);
-            session.setPassword(password);
-            Properties properties = new Properties();
-            properties.put("StrictHostKeyChecking","no");
-            session.setConfig(properties);
-            session.setTimeout(1000);
-        } catch (JSchException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         return session;
     }
 
-    public static boolean testConnection(String user,String password, String host, int port){
+
+    private static Session getSession(String user, String password, String host, int port) {
+        Session session = null;
+        try {
+            JSch JSCH = new JSch();
+            session = JSCH.getSession(user, host, port);
+            session.setPassword(password);
+            Properties properties = new Properties();
+            properties.put("StrictHostKeyChecking", "no");
+            session.setConfig(properties);
+            session.setTimeout(1000);
+        } catch (JSchException e) {
+            //  e.printStackTrace();
+        }
+        return session;
+    }
+
+
+    public boolean testConnection() {
+        boolean result = false;
+        try {
+            session.openChannel("exec");
+            result = true;
+        } catch (JSchException e) {
+            // e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static boolean testConnection(Host host) {
         boolean result = false;
 
-        Session session = getSession(user,password,host,port);
+        Session session = getSession(host.getUser(), host.getPassword(), host.getHostUrl(), host.getPort());
         try {
             session.connect();
             result = true;
             session.disconnect();
         } catch (JSchException e) {
-            e.printStackTrace();
-        } catch (Throwable t){
-            t.printStackTrace();
+            //  e.printStackTrace();
+        } catch (Throwable t) {
+            //  t.printStackTrace();
         }
-        return  result;
+        return result;
     }
 
-    public static boolean testConnection(Host host){
-        boolean result = false;
-
-        Session session = getSession(host.getUser(),host.getPassword(),host.getHostUrl(),host.getPort());
-        try {
-            session.connect();
-            result = true;
-            session.disconnect();
-        } catch (JSchException e) {
-            e.printStackTrace();
-        } catch (Throwable t){
-            t.printStackTrace();
-        }
-        return  result;
-    }
-
-    public List<Service> getServices(){
-        List<Service>  services = new ArrayList<>();
+    public List<Service> getServices() {
+        List<Service> services = new ArrayList<>();
         String result = null;
-        try{
+        try {
             result = this.execute("sudo /usr/sbin/service --status-all");
             List<String> servicesName = splitServicesString(result);
             for (String s : servicesName) {
                 Service service = new Service();
                 service.setName(s);
-                service.setActivated(isServiceActivated(s));
+                service.setActivated(isServiceActivated(service));
                 services.add(service);
             }
-        }catch (Throwable t){
-            t.printStackTrace();
+        } catch (Throwable t) {
+            //  t.printStackTrace();
         }
         return services;
     }
 
 
-    public String execute(String command)
-    {
+    public String execute(String command) {
         StringBuilder outputBuffer = new StringBuilder();
 
-        try
-        {
-            if (!session.isConnected()){
-                session.connect();
+        try {
+            if (session == null || !session.isConnected()) {
                 session = getSessionInstance();
             }
             Channel channel = session.openChannel("exec");
-            ((ChannelExec)channel).setCommand(command);
+            ((ChannelExec) channel).setCommand(command);
             InputStream commandOutput = channel.getInputStream();
             channel.connect();
             int readByte = commandOutput.read();
 
-            while(readByte != 0xffffffff)
-            {
-                outputBuffer.append((char)readByte);
+            while (readByte != 0xffffffff) {
+                outputBuffer.append((char) readByte);
                 readByte = commandOutput.read();
             }
 
             channel.disconnect();
-        }
-        catch(IOException ioX)
-        {
-
-            return null;
-        }
-        catch(JSchException jschX)
-        {
-
-            return null;
+        } catch (IOException ioX) {
+            //  ioX.printStackTrace();
+        } catch (JSchException jschX) {
+            //  jschX.printStackTrace();
+        } catch (Throwable throwable) {
+            // throwable.printStackTrace();
         }
 
         return outputBuffer.toString();
@@ -156,26 +142,42 @@ public class HostConnection {
 
     private List<String> splitServicesString(String result) {
         List<String> services = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\s\\w+([-._]?)\\w+\\n");
-        Matcher matcher = pattern.matcher(result);
-        while (matcher.find()) {
-            String temp = matcher.group();
-            services.add(temp.substring(0, temp.length() - 1));
+        try {
+            Pattern pattern = Pattern.compile("\\s\\w+([-._]?)\\w+\\n");
+            Matcher matcher = pattern.matcher(result);
+            while (matcher.find()) {
+                String temp = matcher.group().replace("\n", "").trim();
+                services.add(temp);
+            }
+        } catch (Throwable t) {
+            //  t.printStackTrace();
         }
         return services;
     }
 
-    public boolean isServiceActivated(String s) {
+    public boolean isServiceActivated(Service s) {
         boolean result = false;
 
 
-        String commandResult = this.execute("/usr/sbin/service " + s + " status");
+        String commandResult = this.execute("/usr/sbin/service " + s.getName() + " status");
 
-        if (commandResult != null){
+        if (commandResult != null) {
             result = commandResult.contains("Active: active");
         }
 
         return result;
+    }
+
+    public String startService(Service service) {
+        return this.execute("sudo /usr/sbin/service " + service.getName() + " start");
+    }
+
+    public String stopService(Service service) {
+        return this.execute("sudo /usr/sbin/service " + service.getName() + " stop");
+    }
+
+    public void closeConnection() {
+        this.session = null;
     }
 
 }

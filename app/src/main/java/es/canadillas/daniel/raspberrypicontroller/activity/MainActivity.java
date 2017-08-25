@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mSshController = SshController.getInstance();
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
 
             private ListView lsHosts;
             private List<Host> hosts;
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
             @Override
             protected void onProgressUpdate(Void... values) {
                 super.onProgressUpdate(values);
-                if (hosts != null){
-                    lsHosts.setAdapter(new HostItemAdapter(MainActivity.this,hosts));
+                if (hosts != null) {
+                    lsHosts.setAdapter(new HostItemAdapter(MainActivity.this, hosts));
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-
-        // return true so that the menu pop up is opened
         return true;
     }
 
@@ -66,10 +64,10 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean returnable = true;
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.action_add:
-                    showHostDialog();
+                showHostDialog();
                 break;
             default:
                 super.onOptionsItemSelected(item);
@@ -87,35 +85,22 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         Dialog dialogView = dialog.getDialog();
-        Toast.makeText(this,"possitive",Toast.LENGTH_SHORT).show();
-        EditText txtHost =  dialogView.findViewById(R.id.edTxtHost);
-        EditText txtUser =  dialogView.findViewById(R.id.edTxtUser);
-        EditText txtPassword =  dialogView.findViewById(R.id.edTxtPassword);
+        EditText txtHost = dialogView.findViewById(R.id.edTxtHost);
+        EditText txtUser = dialogView.findViewById(R.id.edTxtUser);
+        EditText txtPassword = dialogView.findViewById(R.id.edTxtPassword);
 
         String hostStr = txtHost.getText().toString();
         String userStr = txtUser.getText().toString();
         String passwordStr = txtPassword.getText().toString();
         //TODO mostrar mensaje o no cerrar cuando falla
-        if(!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()){
-            try{
-                mSshController.addHost(hostStr,userStr,passwordStr);
-                Toast.makeText(this,"New host introduced",Toast.LENGTH_SHORT).show();
-            }catch (NumberFormatException ex){
-                Toast.makeText(this,"ERROR",Toast.LENGTH_SHORT).show();
+        if (!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()) {
+            try {
+                mSshController.addHost(hostStr, userStr, passwordStr);
+            } catch (NumberFormatException ex) {
+                Toast.makeText(this, getString(R.string.error_new_host), Toast.LENGTH_SHORT).show();
             }
-        }else{
-            if (hostStr.isEmpty()){
-                txtHost.setTextColor(0xAAff0000);
-            }
-            if (userStr.isEmpty()){
-                txtUser.setTextColor(0xAAff0000);
-            }
-            if (passwordStr.isEmpty()){
-                txtPassword.setTextColor(0xAAff0000);
-            }
-        }
-        for(Host h : mSshController.getHosts()){
-            System.out.println("Host :" + h.getHostUrl());
+        } else {
+            Toast.makeText(this, getString(R.string.error_new_host), Toast.LENGTH_SHORT).show();
         }
         HostItemAdapter hostItemAdapter = ((HostItemAdapter) ((ListView) findViewById(R.id.lsHosts)).getAdapter());
         hostItemAdapter.setHosts(mSshController.getHosts());
@@ -124,6 +109,5 @@ public class MainActivity extends AppCompatActivity implements HostDialog.HostDi
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
-        Toast.makeText(this,"Negagative",Toast.LENGTH_SHORT).show();
     }
 }

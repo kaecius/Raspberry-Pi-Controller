@@ -25,16 +25,14 @@ import es.canadillas.daniel.raspberrypicontroller.dao.DataAccessImpl;
 import es.canadillas.daniel.raspberrypicontroller.model.Host;
 import es.canadillas.daniel.raspberrypicontroller.view.dialog.HostDialog;
 
-/**
- * Created by dani on 16/08/2017.
- */
 
-public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDialogListener{
+public class HostItemAdapter extends BaseAdapter implements HostDialog.HostDialogListener {
 
     private Context context;
     private List<Host> hosts;
     private int actualHostId;
     private SshController sshController;
+
     public HostItemAdapter(Context context, List<Host> hosts) {
         this.context = context;
         this.hosts = hosts;
@@ -48,7 +46,7 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
 
     @Override
     public Object getItem(int i) {
-        return  this.hosts.get(i);
+        return this.hosts.get(i);
     }
 
     @Override
@@ -61,9 +59,9 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
         View rowView = view;
         Host host = this.hosts.get(i);
         final int itemPos = i;
-        if (view == null){
+        if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.host_card,viewGroup,false);
+            rowView = inflater.inflate(R.layout.host_card, viewGroup, false);
         }
 
         ImageButton btnBorrar = rowView.findViewById(R.id.btnDelete);
@@ -74,25 +72,30 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
         txtHost.setText(host.getHostUrl());
         txtID.setText(String.valueOf(host.getId()));
 
-        rowView.setOnClickListener( clickedView -> {
+        rowView.setOnClickListener(clickedView -> {
             Host clickedHost = HostItemAdapter.this.hosts.get(itemPos);
             Intent intent = new Intent(context, ServicesActivity.class);
-            intent.putExtra("host",clickedHost);
+            intent.putExtra("host", clickedHost);
             context.startActivity(intent);
         });
 
-        btnBorrar.setOnClickListener( clickedView -> {
+        btnBorrar.setOnClickListener(clickedView -> {
             DataAccess dao = DataAccessImpl.getInstance();
             dao.deleteHost(HostItemAdapter.this.hosts.get(itemPos));
             hosts.remove(itemPos);
             HostItemAdapter.this.notifyDataSetChanged();
-            Toast.makeText(HostItemAdapter.this.context,"Borrado!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(HostItemAdapter.this.context, context.getString(R.string.deleted), Toast.LENGTH_SHORT).show();
         });
-        btnEditar.setOnClickListener( clickedView -> {
+        btnEditar.setOnClickListener(clickedView -> {
             LinearLayout hostListView = (LinearLayout) clickedView.getParent().getParent();
             String idStr = ((TextView) hostListView.findViewById(R.id.txtID)).getText().toString();
             actualHostId = Integer.parseInt(idStr);
-            HostDialog hostDialog  = new HostDialog();
+            HostDialog hostDialog = new HostDialog();
+            Dialog dialogView = hostDialog.getDialog();
+            EditText txtHostDialog = dialogView.findViewById(R.id.edTxtHost);
+            EditText txtUserDialog = dialogView.findViewById(R.id.edTxtUser);
+            txtHostDialog.setText(host.getHostUrl() + ":" + String.valueOf(host.getPort()));
+            txtUserDialog.setText(host.getUser());
             hostDialog.setListener(HostItemAdapter.this);
             hostDialog.show(((Activity) context).getFragmentManager(), "HostDialogFragment");
         });
@@ -102,32 +105,32 @@ public class HostItemAdapter extends BaseAdapter  implements HostDialog.HostDial
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         Dialog dialogView = dialog.getDialog();
-        EditText txtHost =  dialogView.findViewById(R.id.edTxtHost);
-        EditText txtUser =  dialogView.findViewById(R.id.edTxtUser);
-        EditText txtPassword =  dialogView.findViewById(R.id.edTxtPassword);
+        EditText txtHost = dialogView.findViewById(R.id.edTxtHost);
+        EditText txtUser = dialogView.findViewById(R.id.edTxtUser);
+        EditText txtPassword = dialogView.findViewById(R.id.edTxtPassword);
 
         String hostStr = txtHost.getText().toString();
         String userStr = txtUser.getText().toString();
         String passwordStr = txtPassword.getText().toString();
 
-        if(!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()){
+        if (!hostStr.isEmpty() && !userStr.isEmpty() && !passwordStr.isEmpty()) {
             Host hostModified;
             int i;
-            for (i = 0; i <  hosts.size() && hosts.get(i).getId() != actualHostId; i++);
-            if (i < hosts.size()){
+            for (i = 0; i < hosts.size() && hosts.get(i).getId() != actualHostId; i++) ;
+            if (i < hosts.size()) {
                 hostModified = hosts.get(i);
                 hostModified.setHostUrl(sshController.getHostFromHostStirng(hostStr));
                 hostModified.setPort(sshController.getPortFromHostString(hostStr));
                 hostModified.setUser(userStr);
                 hostModified.setPassword(passwordStr);
-                if (sshController.editHost(hostModified)){
-                    hosts.set(i,hostModified);
+                if (sshController.editHost(hostModified)) {
+                    hosts.set(i, hostModified);
                     HostItemAdapter.this.notifyDataSetChanged();
-                }else {
-                    Toast.makeText(dialog.getDialog().getContext(),"Error al editar",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(dialog.getDialog().getContext(), context.getString(R.string.error_editing), Toast.LENGTH_SHORT).show();
                 }
-            }else{
-                Toast.makeText(dialog.getDialog().getContext(),"Error al editar",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(dialog.getDialog().getContext(), context.getString(R.string.error_editing), Toast.LENGTH_SHORT).show();
             }
         }
     }

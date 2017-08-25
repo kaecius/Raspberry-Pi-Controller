@@ -1,8 +1,5 @@
 package es.canadillas.daniel.raspberrypicontroller.model;
 
-/**
- * Created by dani on 15/08/2017.
- */
 
 public class Service {
 
@@ -14,7 +11,7 @@ public class Service {
         this.isActivated = isActivated;
     }
 
-    public Service(){
+    public Service() {
 
     }
 

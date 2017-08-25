@@ -1,0 +1,25 @@
+<resources>
+    <string name="form_title">Nuevo host</string>
+    <string name="host.form.confirm">Aceptar</string>
+    <string name="host_form_cancel">Cancelar</string>
+    <string name="no_host_found">Host no encontrado en la aplicación</string>
+    <string name="connected_to_host">\"Conectado con éxito a \"</string>
+    <string name="no_connected_to_host">No se puede conectar a</string>
+    <string name="checking">Comprobando conexión</string>
+    <string name="service_activated">Activado</string>
+    <string name="service_disabled">Desactivado</string>
+    <string name="activating_service">Activando</string>
+    <string name="disabling_service">Deshabilitando</string>
+    <string name="error_new_host">Error al introducir nuevo host</string>
+    <string name="error_loading_services">Error en la carga de servicios</string>
+    <string name="error_establishing_connection">Error durante la conexión</string>
+    <string name="deleted">Borrado !</string>
+    <string name="error_editing">Error al editar</string>
+    <string name="error_service_upgrade">Error mientras se actualizada el servicio</string>
+    <string name="services_not_found">No hay servicios disponibles :(</string>
+    <string name="host_hint">[host.address | ip]:port</string>
+    <string name="user_title">Ssh user :</string>
+    <string name="host_title">Host :</string>
+    <string name="user_hint">User</string>
+    <string name="pass_title">Ssh password :</string>
+</resources>

@@ -11,11 +11,7 @@ import es.canadillas.daniel.raspberrypicontroller.config.App;
 import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataContract;
 import es.canadillas.daniel.raspberrypicontroller.dao.sqlite.DataOpenHelper;
 import es.canadillas.daniel.raspberrypicontroller.model.Host;
-import es.canadillas.daniel.raspberrypicontroller.util.Security;
 
-/**
- * Created by dani on 14/08/2017.
- */
 
 public class DataAccessImpl implements DataAccess {
     private static final DataAccessImpl ourInstance = new DataAccessImpl();
@@ -43,15 +39,14 @@ public class DataAccessImpl implements DataAccess {
         String sortOrder =
                 DataContract.DataEntry._ID + " ASC";
 
-        Cursor c = db.query(DataContract.DataEntry.DATA_TABLE_NAME,projection,null,null,null,null,sortOrder);
-        if(c.moveToFirst()){
-            do{
+        Cursor c = db.query(DataContract.DataEntry.DATA_TABLE_NAME, projection, null, null, null, null, sortOrder);
+        if (c.moveToFirst()) {
+            do {
                 hosts.add(new Host(c));
-            }while(c.moveToNext());
+            } while (c.moveToNext());
         }
         return hosts;
     }
-
 
 
     @Override
@@ -60,39 +55,39 @@ public class DataAccessImpl implements DataAccess {
     }
 
     @Override
-    public void addHost(String host, String user, String password,int port) {
+    public void addHost(String host, String user, String password, int port) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DataContract.DataEntry.HOST_COLUMN_NAME , host);
-        values.put(DataContract.DataEntry.USER_COLUMN_NAME , user);
-        values.put(DataContract.DataEntry.PASS_COLUMN_NAME , password);
+        values.put(DataContract.DataEntry.HOST_COLUMN_NAME, host);
+        values.put(DataContract.DataEntry.USER_COLUMN_NAME, user);
+        values.put(DataContract.DataEntry.PASS_COLUMN_NAME, password);
         values.put(DataContract.DataEntry.PORT_COLUMN_NAME, port);
-        db.insert(DataContract.DataEntry.DATA_TABLE_NAME,null,values);
+        db.insert(DataContract.DataEntry.DATA_TABLE_NAME, null, values);
     }
 
     @Override
     public void deleteHost(Host host) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String selection = DataContract.DataEntry._ID + "= ?";
-        String[] selectionArgs = { String.valueOf(host.getId()) };
-        db.delete(DataContract.DataEntry.DATA_TABLE_NAME,selection,selectionArgs);
+        String[] selectionArgs = {String.valueOf(host.getId())};
+        db.delete(DataContract.DataEntry.DATA_TABLE_NAME, selection, selectionArgs);
     }
 
 
-    public boolean editHost(Host host){
+    public boolean editHost(Host host) {
         boolean result = false;
-        try{
+        try {
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
             ContentValues values = new ContentValues();
             values.put(DataContract.DataEntry.HOST_COLUMN_NAME, host.getHostUrl());
             values.put(DataContract.DataEntry.PORT_COLUMN_NAME, host.getPort());
-            values.put(DataContract.DataEntry.USER_COLUMN_NAME , host.getUser());
+            values.put(DataContract.DataEntry.USER_COLUMN_NAME, host.getUser());
             values.put(DataContract.DataEntry.PASS_COLUMN_NAME, host.getPassword());
             String selection = DataContract.DataEntry._ID + " = ?";
-            String[] selectionArgs = { String.valueOf(host.getId()) };
-            db.update(DataContract.DataEntry.DATA_TABLE_NAME, values,selection,selectionArgs);
+            String[] selectionArgs = {String.valueOf(host.getId())};
+            db.update(DataContract.DataEntry.DATA_TABLE_NAME, values, selection, selectionArgs);
             result = true;
-        }catch(Throwable t){
+        } catch (Throwable t) {
         }
         return result;
     }

@@ -8,7 +8,6 @@
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_input_add"
         android:title=""
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 
 </menu>

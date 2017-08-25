@@ -14,7 +14,7 @@
         android:switchMinWidth="50dp"
         android:switchPadding="10dp"
         android:switchTextAppearance="@style/TextAppearance.AppCompat"
-        android:text="@string/service_deactivated"
+        android:text="@string/service_disabled"
         android:theme="@style/SCBSwitch" />
 
     <TextView

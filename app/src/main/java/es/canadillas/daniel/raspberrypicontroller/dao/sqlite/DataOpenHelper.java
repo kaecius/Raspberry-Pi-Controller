@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by dani on 14/08/2017.
- */
 
 public class DataOpenHelper extends SQLiteOpenHelper {
 
@@ -26,8 +23,8 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + DataContract.DataEntry.DATA_TABLE_NAME;
 
-    public DataOpenHelper(Context context){
-        super(context, DataContract.DataEntry.DATA_TABLE_NAME,null,DataOpenHelper.DATABASE_VERSION);
+    public DataOpenHelper(Context context) {
+        super(context, DataContract.DataEntry.DATA_TABLE_NAME, null, DataOpenHelper.DATABASE_VERSION);
     }
 
     @Override
