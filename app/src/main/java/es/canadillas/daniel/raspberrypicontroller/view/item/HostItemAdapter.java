@@ -3,6 +3,7 @@ package es.canadillas.daniel.raspberrypicontroller.view.item;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -91,13 +92,9 @@ public class HostItemAdapter extends BaseAdapter implements HostDialog.HostDialo
             String idStr = ((TextView) hostListView.findViewById(R.id.txtID)).getText().toString();
             actualHostId = Integer.parseInt(idStr);
             HostDialog hostDialog = new HostDialog();
-            Dialog dialogView = hostDialog.getDialog();
-            EditText txtHostDialog = dialogView.findViewById(R.id.edTxtHost);
-            EditText txtUserDialog = dialogView.findViewById(R.id.edTxtUser);
-            txtHostDialog.setText(host.getHostUrl() + ":" + String.valueOf(host.getPort()));
-            txtUserDialog.setText(host.getUser());
             hostDialog.setListener(HostItemAdapter.this);
             hostDialog.show(((Activity) context).getFragmentManager(), "HostDialogFragment");
+            //TODO rellenar los input con la informacion del host a editar
         });
         return rowView;
     }

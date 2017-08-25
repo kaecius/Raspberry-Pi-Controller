@@ -8,9 +8,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import es.canadillas.daniel.raspberrypicontroller.R;
+import es.canadillas.daniel.raspberrypicontroller.model.Host;
 
 
 public class HostDialog extends DialogFragment {
+
+
+
+    public HostDialog(){
+
+    }
 
     public interface HostDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);

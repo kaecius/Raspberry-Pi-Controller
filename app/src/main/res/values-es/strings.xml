@@ -15,7 +15,7 @@
     <string name="error_establishing_connection">Error durante la conexión</string>
     <string name="deleted">Borrado !</string>
     <string name="error_editing">Error al editar</string>
-    <string name="error_service_upgrade">Error mientras se actualizada el servicio</string>
+    <string name="error_service_upgrade">Error mientras se actualizaba el servicio</string>
     <string name="services_not_found">No hay servicios disponibles :(</string>
     <string name="host_hint">[host.address | ip]:port</string>
     <string name="user_title">Usuario ssh :</string>
