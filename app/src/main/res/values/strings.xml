@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Raspberry Pi Controller</string>
+    <string name="app_name" translatable="false">Controlpi</string>
     <string name="form_title">New host</string>
     <string name="host.form.confirm">Confirm</string>
     <string name="host_form_cancel">Cancel</string>
@@ -18,7 +18,7 @@
     <string name="deleted">Deleted !</string>
     <string name="error_editing">Error editing</string>
     <string name="error_service_upgrade">Error while service upgrading</string>
-    <string name="services_not_found">No hay servicios disponibles :(</string>
+    <string name="services_not_found">There is no services available :(</string>
     <string name="host_hint">[host.address | ip]:port</string>
     <string name="user_title">Ssh user :</string>
     <string name="host_title">Host :</string>

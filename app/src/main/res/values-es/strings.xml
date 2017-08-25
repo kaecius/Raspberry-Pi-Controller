@@ -18,8 +18,8 @@
     <string name="error_service_upgrade">Error mientras se actualizada el servicio</string>
     <string name="services_not_found">No hay servicios disponibles :(</string>
     <string name="host_hint">[host.address | ip]:port</string>
-    <string name="user_title">Ssh user :</string>
+    <string name="user_title">Usuario ssh :</string>
     <string name="host_title">Host :</string>
     <string name="user_hint">User</string>
-    <string name="pass_title">Ssh password :</string>
+    <string name="pass_title">Contraseña :</string>
 </resources>
