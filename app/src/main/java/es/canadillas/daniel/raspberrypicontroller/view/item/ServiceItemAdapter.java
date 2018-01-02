@@ -1,5 +1,6 @@
 package es.canadillas.daniel.raspberrypicontroller.view.item;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -62,6 +63,7 @@ public class ServiceItemAdapter extends BaseAdapter {
         TextView txt = rowView.findViewById(R.id.txtServiceName);
         txt.setText(services.get(i).getName());
         onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean isChecked) {
                 final Switch sw = (Switch) compoundButton;

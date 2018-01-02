@@ -3,6 +3,7 @@
     <string name="form_title">New host</string>
     <string name="host.form.confirm">Confirm</string>
     <string name="host_form_cancel">Cancel</string>
+    <string name="hosts_bar_title" translatable="false">Hosts</string>
     <string name="no_host_found">Host not found in application</string>
     <string name="connected_to_host">"Successfully connected to "</string>
     <string name="no_connected_to_host">Cannot connect to</string>

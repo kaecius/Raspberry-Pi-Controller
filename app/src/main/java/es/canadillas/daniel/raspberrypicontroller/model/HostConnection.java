@@ -110,7 +110,7 @@ public class HostConnection {
     }
 
 
-    public String execute(String command) {
+    private String execute(String command) {
         StringBuilder outputBuffer = new StringBuilder();
 
         try {
@@ -129,10 +129,6 @@ public class HostConnection {
             }
 
             channel.disconnect();
-        } catch (IOException ioX) {
-            //  ioX.printStackTrace();
-        } catch (JSchException jschX) {
-            //  jschX.printStackTrace();
         } catch (Throwable throwable) {
             // throwable.printStackTrace();
         }

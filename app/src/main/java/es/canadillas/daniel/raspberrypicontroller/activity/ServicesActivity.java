@@ -1,6 +1,7 @@
 package es.canadillas.daniel.raspberrypicontroller.activity;
 
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
@@ -68,6 +69,7 @@ public class ServicesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void refreshHostStatus() {
         new AsyncTask<Void, Void, Void>() {
 
@@ -123,6 +125,7 @@ public class ServicesActivity extends AppCompatActivity {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void showServicesOnUI() {
         TextView noServices = (TextView) findViewById(R.id.txtNoServices);
         ListView lsServices = (ListView) findViewById(R.id.lsServices);
@@ -166,6 +169,7 @@ public class ServicesActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void initConnection() {
         new AsyncTask<Void, Void, Void>() {
 
