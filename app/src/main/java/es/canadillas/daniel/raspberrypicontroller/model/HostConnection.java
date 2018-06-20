@@ -84,9 +84,9 @@ public class HostConnection {
             result = true;
             session.disconnect();
         } catch (JSchException e) {
-            //  e.printStackTrace();
+           //   e.printStackTrace();
         } catch (Throwable t) {
-            //  t.printStackTrace();
+           //   t.printStackTrace();
         }
         return result;
     }
