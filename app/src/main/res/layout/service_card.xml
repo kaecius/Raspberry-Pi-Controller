@@ -7,7 +7,7 @@
 
     <Switch
         android:id="@+id/swtichActivated"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="match_parent"
         android:checked="false"
         android:paddingLeft="15dp"
@@ -28,5 +28,6 @@
         android:paddingLeft="15dp"
         android:text="@string/default_service_name"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 </RelativeLayout>
